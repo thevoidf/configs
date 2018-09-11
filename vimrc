@@ -1,5 +1,5 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+set nocompatible
+filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -11,7 +11,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
-call vundle#end()            " required
+call vundle#end()
 
 filetype plugin indent on
 set tabstop=2
@@ -26,10 +26,9 @@ color dracula
 set background=dark
 hi Normal guibg=NONE ctermbg=NONE
 
-" try to generate symbols for airline
-let g:airline_powerline_fonts = 1
 let g:airline_theme='simple'
-" simple
 
 set t_Co=256A
 
+" ctrlp ignore dirs
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'

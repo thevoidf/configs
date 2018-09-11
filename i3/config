@@ -11,8 +11,8 @@ bindsym $mod+Return exec i3-sensible-terminal
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
-bindsym $mod+d exec rofi -show run
+# start rofi
+bindsym $mod+d exec rofi -show run -lines 4 -width 30 -location 0 -yoffset -100 -bw 0 -font "Ubuntu 14"
 
 # change focus
 bindsym $mod+j focus left
@@ -98,7 +98,8 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
-client.focused					#00FF00 #00FF00 #ffffff #ffffff
+# colors
+client.focused					#00FFFF #00FFFF #ffffff #ffffff
 client.focused_inactive #000000 #000000 #ffffff #2C2C2C
 client.unfocused 				#000000 #000000 #ffffff #2C2C2C
 client.urgent 					#00C1FF #00C1FF #000088 #00C1FF
@@ -133,13 +134,13 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
-bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
@@ -156,7 +157,7 @@ bindsym Print exec magick import -window root screen.jpg
 new_window 1pixel
 
 # default gaps
-gaps outer 10
+gaps inner 10
 
 # change inner gaps
 bindsym $mod+Shift+plus gaps outer current plus 5
@@ -167,9 +168,26 @@ bindsym $mod+Shift+Control+minus gaps inner current minus 5
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
-exec feh --bg-scale ~/Pictures/spaces.jpg
+exec feh --bg-scale ~/Pictures/mr_dark.jpg
 exec compton
 
-exec --no-startup-id setxkbmap -layout us,ge
-exec --no-startup-id setxkbmap -option 'grp:ctrls_toggle'
+# set keyboard layouts
+exec --no-startup-id setxkbmap -model pc105 -layout us,ge -option grp:ctrls_toggle
 
+# lock, restart, poweroff
+set $Locker i3lock && sleep 1
+
+bindsym Control+Mod1+l exec --no-startup-id $Locker
+
+set $mode_system logout (l), reboot (r), shutdown (s)
+mode "$mode_system" {
+    bindsym l exec --no-startup-id i3-msg exit, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym p exec --no-startup-id systemctl poweroff -i, mode "default"  
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym Control+Mod1+Delete mode "$mode_system"
