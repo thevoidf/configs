@@ -1,5 +1,5 @@
-set nocompatible
-filetype off
+set nocompatible              " be iMproved, required
+filetype off                  " required
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -11,7 +11,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
-call vundle#end()
+call vundle#end()            " required
 
 filetype plugin indent on
 set tabstop=2
@@ -30,5 +30,6 @@ let g:airline_theme='simple'
 
 set t_Co=256A
 
-" ctrlp ignore dirs
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+"let g:airline_section_x = '%{&filetype}'
+"let g:airline_section_b = '%{&filetype}'
