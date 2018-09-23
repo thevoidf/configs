@@ -1,11 +1,11 @@
 [colors]
 ;background = ${xrdb:color0:#222}
-background = #cc000000
+background = #000000
 background-alt = #444
 ;foreground = ${xrdb:color7:#222}
 foreground = #ffffff
 foreground-alt = #555
-primary = #6600ffff
+primary = #00ffff
 secondary = #e60053
 alert = #bd2c40
 
@@ -33,13 +33,15 @@ module-margin-right = 2
 ; default, indicators
 font-0 = ubuntu:size=12;2
 ; wlan, date
-font-1 = ubuntu:size=12;2
+font-1 = ubuntu:size=11;2
 ; pulseaudio
-font-2 = ubuntu:size=11;3
+font-2 = ubuntu:size=10;2
 ; xkbd
 font-3 = ubuntu:size=14;1
 ; xwindow
-font-4 = ubuntu:size=11;3
+font-4 = ubuntu:size=10;2
+font-5 = FontAwesome5Free:style=Solid:pixelsize=12;3
+font-6 = unifont:fontformat=truetype:size=8:antialias=false;2
 
 modules-left = bspwm i3
 modules-center = xwindow 
@@ -73,7 +75,7 @@ type = internal/xkeyboard
 blacklist-0 = num lock
 
 format-prefix-foreground = ${colors.foreground-alt}
-label-layout = %{T4}%layout%%{T-}
+label-layout = %{T6}%{T-}  %{T4}%layout%%{T-}
 
 [module/bspwm]
 type = internal/bspwm
@@ -112,7 +114,7 @@ label-mode-background = ${colors.primary}
 
 ; focused = Active workspace on focused monitor
 label-focused = %index%
-label-focused-background = #00000000
+label-focused-background = #2200ffff
 label-focused-underline = ${module/bspwm.label-focused-underline}
 label-focused-padding = 3
 
@@ -140,26 +142,26 @@ interface = wlp3s0
 interval = 3.0
 
 format-connected = <label-connected>
-label-connected = %{T2}%essid%%{T-}
-format-disconnected = no connection
+label-connected = %{T6}%{T-} %{T2}%essid%%{T-}
+format-disconnected =   
 ; label-connected-foreground = #00ffff
 
 [module/date]
 type = internal/date
 interval = 5
 date = %{T2}%a %b %e, %l:%M %p%{T-}
-label = %date%
+label = %{T6}%{T-} %date%
 ; label-foreground = #00ffff
 
 [module/pulseaudio]
 type = internal/pulseaudio
 
 format-volume = <label-volume> <bar-volume>
-label-volume = %{T3}%percentage%%%{T-}
+label-volume = %{T6}%{T-}  %{T3}%percentage%%%{T-}
 label-volume-foreground = ${root.foreground}
 
-label-muted = X muted
-label-muted-foreground = #666
+label-muted = %{T6}  %{T-}
+label-muted-foreground = #fff
 
 bar-volume-width = 10
 bar-volume-foreground-0 = #55aa55
@@ -170,12 +172,12 @@ bar-volume-foreground-4 = #55aa55
 bar-volume-foreground-5 = #f5a70a
 bar-volume-foreground-6 = #ff5555
 bar-volume-gradient = false
-bar-volume-indicator = !
-bar-volume-indicator-font = 2
-bar-volume-fill = =
-bar-volume-fill-font = 2
-bar-volume-empty = -
-bar-volume-empty-font = 2
+bar-volume-indicator = |
+bar-volume-indicator-font = 7
+bar-volume-fill = ─
+bar-volume-fill-font = 7
+bar-volume-empty = ─
+bar-volume-empty-font = 7
 bar-volume-empty-foreground = ${colors.foreground-alt}
 
 [settings]
