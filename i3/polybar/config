@@ -1,9 +1,9 @@
 [colors]
 ;background = ${xrdb:color0:#222}
-background = #000000
-background-alt = #444
+background = #151515
+background-alt = #fbf1c7
 ;foreground = ${xrdb:color7:#222}
-foreground = #ffffff
+foreground = #ebdbb2
 foreground-alt = #555
 primary = #00ffff
 secondary = #e60053
@@ -25,21 +25,21 @@ line-size = 3
 line-color = #f00
 
 padding-left = 1
-padding-right = 4
+padding-right = 3
 
 module-margin-left = 1
 module-margin-right = 2
 
 ; default, indicators
-font-0 = ubuntu:size=12;2
+font-0 = NotoSans:size=11;2
 ; wlan, date
-font-1 = ubuntu:size=11;2
+font-1 = NotoSans:size=11;2
 ; pulseaudio
-font-2 = ubuntu:size=10;2
+font-2 = NotoSans:size=10;2
 ; xkbd
-font-3 = ubuntu:size=14;1
+font-3 = NotoSans:size=14;1
 ; xwindow
-font-4 = ubuntu:size=10;2
+font-4 = NotoSans:size=10;2
 font-5 = FontAwesome5Free:style=Solid:pixelsize=12;3
 font-6 = unifont:fontformat=truetype:size=8:antialias=false;2
 
@@ -69,6 +69,7 @@ cursor-scroll = ns-resize
 [module/xwindow]
 type = internal/xwindow
 label = %{T5}%title%%{T-}
+label-maxlen = 100
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -114,8 +115,9 @@ label-mode-background = ${colors.primary}
 
 ; focused = Active workspace on focused monitor
 label-focused = %index%
-label-focused-background = #2200ffff
-label-focused-underline = ${module/bspwm.label-focused-underline}
+label-focused-background = #303030
+label-focused-underline = #fe8019
+label-focused-foreground= #ffffff
 label-focused-padding = 3
 
 ; unfocused = Inactive workspace on any monitor
@@ -144,33 +146,33 @@ interval = 3.0
 format-connected = <label-connected>
 label-connected = %{T6}%{T-} %{T2}%essid%%{T-}
 format-disconnected =   
-; label-connected-foreground = #00ffff
+label-connected-foreground = ${colors.foreground}
 
 [module/date]
 type = internal/date
 interval = 5
 date = %{T2}%a %b %e, %l:%M %p%{T-}
 label = %{T6}%{T-} %date%
-; label-foreground = #00ffff
+label-foreground = ${colors.foreground}
 
 [module/pulseaudio]
 type = internal/pulseaudio
 
 format-volume = <label-volume> <bar-volume>
 label-volume = %{T6}%{T-}  %{T3}%percentage%%%{T-}
-label-volume-foreground = ${root.foreground}
+label-volume-foreground = ${colors.foreground}
 
 label-muted = %{T6}  %{T-}
 label-muted-foreground = #fff
 
 bar-volume-width = 10
-bar-volume-foreground-0 = #55aa55
-bar-volume-foreground-1 = #55aa55
-bar-volume-foreground-2 = #55aa55
-bar-volume-foreground-3 = #55aa55
-bar-volume-foreground-4 = #55aa55
-bar-volume-foreground-5 = #f5a70a
-bar-volume-foreground-6 = #ff5555
+bar-volume-foreground-0 = #fe8019
+bar-volume-foreground-1 = #fe8019
+bar-volume-foreground-2 = #fe8019
+bar-volume-foreground-3 = #fe8019
+bar-volume-foreground-4 = #fe8019
+bar-volume-foreground-5 = #fe8019
+bar-volume-foreground-6 = #fe8019
 bar-volume-gradient = false
 bar-volume-indicator = |
 bar-volume-indicator-font = 7
