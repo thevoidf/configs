@@ -1,6 +1,6 @@
 set $mod Mod4
 
-font pango:Ubuntu 11
+font pango:NotoSans 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -86,6 +86,9 @@ bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws10
 
+assign [class="Firefox"] $ws1
+assign [class="Skype"] $ws3
+
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1
 bindsym $mod+Shift+2 move container to workspace $ws2
@@ -99,10 +102,16 @@ bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
 # colors
-client.focused					#00FFFF #00FFFF #ffffff #ffffff
+client.focused					#fe8019 #fe8019 #000000 #ffffff
 client.focused_inactive #000000 #000000 #ffffff #2C2C2C
 client.unfocused 				#000000 #000000 #ffffff #2C2C2C
 client.urgent 					#00C1FF #00C1FF #000088 #00C1FF
+
+# remove header
+new_window 1pixel
+
+# default gaps
+gaps inner 10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -133,61 +142,54 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
-
-# Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 5
-bindsym XF86MonBrightnessDown exec xbacklight -dec 5
-
-# Media player controls
-bindsym XF86AudioPlay exec playerctl play
-bindsym XF86AudioPause exec playerctl pause
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
-
-# take screenshot
-bindsym Print exec magick import -window root screen.jpg
-
-# remove header and borders
-# for_window [class="^.*"] border pixel 0
-# remove header
-new_window 1pixel
-
-# default gaps
-gaps inner 10
-
-# change inner gaps
-bindsym $mod+Shift+plus gaps outer current plus 5
-bindsym $mod+Shift+minus gaps outer current minus 5
-# change outer gaps
-bindsym $mod+Shift+Control+plus gaps inner current plus 5
-bindsym $mod+Shift+Control+minus gaps inner current minus 5
-
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-
-exec feh --bg-scale ~/Pictures/mr_dark.jpg
-exec compton
-
-# set keyboard layouts
-exec --no-startup-id setxkbmap -model pc105 -layout us,ge -option grp:ctrls_toggle
-
-# lock, restart, poweroff
-set $Locker i3lock && sleep 1
-
+# lock screen with ctrl+win+l
+set $Locker i3lock --color=252525 && sleep 1
 bindsym Control+Mod1+l exec --no-startup-id $Locker
 
+# restart and poweroff
 set $mode_system logout (l), reboot (r), shutdown (p)
 mode "$mode_system" {
     bindsym l exec --no-startup-id i3-msg exit, mode "default"
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
     bindsym p exec --no-startup-id systemctl poweroff -i, mode "default"  
 
-    # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-
 bindsym Control+Mod1+Delete mode "$mode_system"
+
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
+
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 8
+bindsym XF86MonBrightnessDown exec xbacklight -dec 8
+
+# take screenshot
+bindsym Print exec magick import -window root screen.jpg
+
+# change inner gaps
+bindsym $mod+Shift+plus gaps outer current plus 5
+bindsym $mod+Shift+minus gaps outer current minus 5
+
+# change outer gaps
+bindsym $mod+Shift+Control+plus gaps inner current plus 5
+bindsym $mod+Shift+Control+minus gaps inner current minus 5
+
+# start polybar
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+
+# set background
+exec --no-startup-id feh --bg-scale ~/Pictures/mount.jpg
+
+# set keyboard layouts
+exec --no-startup-id setxkbmap -model pc105 -layout us,ge -option grp:ctrls_toggle
+
+# meh
+# exec compton
+# set default brightness
+# xbacklight -set 30
+
+exec --no-startup-id firefox
