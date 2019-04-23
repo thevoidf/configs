@@ -13,3 +13,6 @@ alias dirs='dirs -v'
 alias tmux="TERM=screen-256color-bce tmux"
 alias xrf='xrdb .Xresources'
 export EDITOR='vim'
+
+alias xcopy='xclip -selection clipboard'
+alias xpaste='xclip -selection clipboard -o'
