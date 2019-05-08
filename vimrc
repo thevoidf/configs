@@ -12,8 +12,6 @@ Plug 'tpope/vim-repeat'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-commentary'
-Plug 'soimort/translate-shell', { 'dir': '~/.translate-shell', 'do': 'wget git.io/trans && chmod +x ./trans' }
-Plug 'VincentCordobes/vim-translate'
 Plug 'tpope/vim-fugitive'
 
 call plug#end()
