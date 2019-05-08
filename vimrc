@@ -2,6 +2,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+Plug 'w0rp/ale'
 Plug 'dracula/vim'
 Plug 'morhetz/gruvbox'
 Plug 'itchyny/lightline.vim'
