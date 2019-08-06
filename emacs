@@ -45,18 +45,37 @@
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
+
 ;; setup melpa
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
 										(not (gnutls-available-p))))
 			 (proto (if no-ssl "http" "https")))
-	;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
 	(add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-	;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
 	(when (< emacs-major-version 24)
-		;; For important compatibility libraries like cl-lib
 		(add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+
+(defun install-packages (&rest packages) ;
+  (mapcar
+   (lambda (package)
+     (if (package-installed-p package)
+         nil
+           (package-install package)
+         package))
+   packages))
+
+(or (file-exists-p package-user-dir)
+    (package-refresh-contents))
+
+;; install packages
 (package-initialize)
+(install-packages
+	'powerline
+	'paganini-theme
+	'elcord
+	'auto-complete
+	'web-mode
+	'js2-mode)
 
 ;; set theme
 (load-theme 'paganini t)
@@ -68,7 +87,7 @@
 ;; set font
 (set-default-font "Liberation Mono")
 ;; set font size
-(set-face-attribute 'default (selected-frame) :height 117)
+(set-face-attribute 'default (selected-frame) :height 150)
 ;; no italic
 (set-face-italic-p 'italic nil)
 (custom-set-faces
@@ -84,6 +103,10 @@
 
 ;; auto complete
 (ac-config-default)
+
+;; discord rpc
+(require 'elcord)
+(elcord-mode)
 
 ;; js2 mode
 (require 'js2-mode)
@@ -108,7 +131,7 @@
 ;; vim % thing
 (defun goto-match-paren (arg)
 	"Go to the matching parenthesis if on parenthesis, otherwise insert %.
-	 vi style of % jumping to matching brace."
+	vi style of % jumping to matching brace."
 	(interactive "p")
 	(cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
 				((looking-at "\\s\)") (forward-char 1) (backward-list 1))
@@ -160,10 +183,27 @@
 	"Toggles term between line mode and char mode"
 	(interactive)
 	(if (term-in-line-mode)
-			(term-char-mode)
+		(term-char-mode)
 		(term-line-mode)))
 
 (define-key term-mode-map (kbd "C-j") 'term-toggle-mode)
 (define-key term-mode-map (kbd "C-j") 'term-toggle-mode)
 (define-key term-raw-map (kbd "C-j") 'term-toggle-mode)
 (define-key term-raw-map (kbd "C-j") 'term-toggle-mode)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+	 ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+ '(custom-safe-themes
+	 (quote
+		("c221703cc604312f6f72349704f7329f80ccc6a261af769332ec80171b728cc0" default)))
+ '(package-selected-packages
+	 (quote
+		(elcord web-mode powerline paganini-theme js2-mode auto-complete))))
+
+;; eval buffer
+(global-set-key (kbd "C-c C-e") 'eval-buffer)
