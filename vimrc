@@ -78,8 +78,11 @@ let g:lightline = {
 	\ 'active': {
 	\		'left': [ [ 'mode'], [ 'filename' ] ],
 	\		'right': [ [ 'lineinfo' ], [ 'percent' ],
-	\              ['filetype'] ]
-	\ }
+	\              ['gitbranch'], ['filetype'] ],
+	\ },
+	\ 'component_function': {
+	\   'gitbranch': 'fugitive#head'
+	\ },
 \ }
 
 " limelight
