@@ -2,7 +2,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
-Plug 'w0rp/ale'
+Plug 'w0rp/ale', { 'on':  'ALEToggle' }
 Plug 'dracula/vim'
 Plug 'morhetz/gruvbox'
 Plug 'itchyny/lightline.vim'
@@ -13,6 +13,10 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'vbe0201/vimdiscord'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'airblade/vim-gitgutter', { 'on': 'GitGutterEnable' }
 
 call plug#end()
 
@@ -32,9 +36,11 @@ set shiftwidth=2
 set noexpandtab
 
 " fix css and js indent in html
-let g:html_indent_script1 = "inc" 
-let g:html_indent_style1 = "inc" 
-let g:plug_window = 'enew' " don't split plug
+let g:html_indent_script1 = "inc"
+let g:html_indent_style1 = "inc"
+
+" don't split plug
+let g:plug_window = 'enew' 
 
 " easier movement
 nnoremap <C-J> <C-W><C-J>
@@ -59,16 +65,9 @@ map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let g:NERDTreeWinSize=24
 
-" translate
-let $PATH .= ':./.translate-shell'
-let g:translate#default_languages = {
-			\ 'en': 'es',
-			\ 'es': 'en'
-			\ }
-map <leader>t :TranslateReplace<cr>
-
 " fzf
 let $FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+nmap <c-f> :Ag 
 nmap <c-p> :Files<cr>
 nmap <c-o> :Buffers<cr>
 
@@ -81,6 +80,19 @@ let g:lightline = {
 	\              ['filetype'] ]
 	\ }
 \ }
+
+" limelight
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
+let g:limelight_default_coefficient = 0.7
+let g:limelight_paragraph_span = 1
+let g:limelight_bop = '^\s'
+let g:limelight_eop = '\ze\n^\s'
+let g:limelight_priority = -1
+
+" git gutter
+set updatetime=100
 
 " call in ~/.vim/after/ftplugin/python.vim
 function! SetupPython()
@@ -103,7 +115,6 @@ else
 endif
 
 " Delete buffer while keeping window layout (don't close buffer's windows).
-" Version 2008-11-18 from http://vim.wikia.com/wiki/VimTip165
 if v:version < 700 || exists('loaded_bclose') || &cp
 	finish
 endif
