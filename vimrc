@@ -13,6 +13,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim'
 Plug 'vbe0201/vimdiscord'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
