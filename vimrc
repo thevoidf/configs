@@ -32,6 +32,8 @@ set incsearch
 set hlsearch
 set laststatus=2
 set noshowmode
+set wildmenu
+set wildmode=list:longest,full
 syntax on
 filetype plugin indent on
 set tabstop=2
