@@ -28,6 +28,8 @@ set splitright
 set clipboard=unnamedplus
 set nowrap
 set number
+set incsearch
+set hlsearch
 set laststatus=2
 set noshowmode
 syntax on
