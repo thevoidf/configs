@@ -5,7 +5,6 @@ Plug 'mxw/vim-jsx'
 Plug 'w0rp/ale', { 'on':  'ALEToggle' }
 Plug 'dracula/vim'
 Plug 'morhetz/gruvbox'
-Plug 'itchyny/lightline.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -13,11 +12,11 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'junegunn/gv.vim'
-Plug 'vbe0201/vimdiscord'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
-Plug 'airblade/vim-gitgutter', { 'on': 'GitGutterEnable' }
+Plug 'mhinz/vim-signify'
 
 call plug#end()
 
@@ -76,18 +75,33 @@ nmap <c-f> :Ag
 nmap <c-p> :Files<cr>
 nmap <c-o> :Buffers<cr>
 
-" light line
-let g:lightline = {
-	\ 'colorscheme': 'deus',
-	\ 'active': {
-	\		'left': [ [ 'mode'], [ 'filename' ] ],
-	\		'right': [ [ 'lineinfo' ], [ 'percent' ],
-	\              ['gitbranch'], ['filetype'] ],
-	\ },
-	\ 'component_function': {
-	\   'gitbranch': 'fugitive#head'
-	\ },
+" statusline
+let g:mode_map = {
+	\	'n': 'Normal',
+	\	'i': 'Insert',
+	\	'V': 'Visual',
+	\	'R': 'Replace',
+	\	's': 'Select',
+	\	't': 'Terminal',
+	\	'c': 'Command',
+	\	'!': 'Shell'
 \ }
+
+function! s:make_statusline()
+	let sep = '|'
+	let mode = '%1* %{g:mode_map[mode()]} %0*'
+	let fn = ' %f '
+	let branch = "%{fugitive#head() != '' ? 'git->'.fugitive#head() : ''}"
+	let num = '%= %{&filetype} %l:%c | %P '
+	return mode.fn.branch.num
+endfunction
+
+let &statusline = s:make_statusline()
+hi StatusLine ctermbg=223 ctermfg=235
+hi StatusLineTerm ctermbg=black ctermfg=white
+hi StatusLineTermNC ctermbg=black ctermfg=white
+
+hi User1 ctermfg=235 ctermbg=223
 
 " limelight
 let g:limelight_conceal_ctermfg = 'gray'
@@ -99,8 +113,8 @@ let g:limelight_bop = '^\s'
 let g:limelight_eop = '\ze\n^\s'
 let g:limelight_priority = -1
 
-" git gutter
-set updatetime=100
+" signify
+let g:signify_vcs_list = ['git']
 
 " call in ~/.vim/after/ftplugin/python.vim
 function! SetupPython()
