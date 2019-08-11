@@ -45,40 +45,43 @@
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
+;; y/n
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; fix packages
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;; setup melpa
 (require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-										(not (gnutls-available-p))))
-			 (proto (if no-ssl "http" "https")))
-	(add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-	(when (< emacs-major-version 24)
-		(add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
 
 (defun install-packages (&rest packages) ;
-  (mapcar
-   (lambda (package)
-     (if (package-installed-p package)
-         nil
-           (package-install package)
-         package))
-   packages))
+	(mapcar
+		(lambda (package)
+			(if (package-installed-p package)
+				nil
+				(package-install package)
+				package))
+		packages))
 
 (or (file-exists-p package-user-dir)
     (package-refresh-contents))
 
-;; install packages
-(package-initialize)
+;; package list
 (install-packages
-	'powerline
-	'paganini-theme
-	'elcord
-	'auto-complete
-	'web-mode
-	'js2-mode)
+ 'powerline
+ 'paganini-theme
+ 'gruvbox-theme
+ 'elcord
+ 'auto-complete
+ 'web-mode
+ 'js2-mode
+ 'undo-tree
+ 'helm)
 
 ;; set theme
-(load-theme 'paganini t)
+(load-theme 'gruvbox-dark-hard t)
 ;; set background color
 (set-background-color "#000")
 ;; set linum colors
@@ -90,12 +93,6 @@
 (set-face-attribute 'default (selected-frame) :height 150)
 ;; no italic
 (set-face-italic-p 'italic nil)
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 ;; set window size
 (add-to-list 'default-frame-alist '(height . 36))
@@ -105,8 +102,8 @@
 (ac-config-default)
 
 ;; discord rpc
-(require 'elcord)
-(elcord-mode)
+;; (require 'elcord)
+;; (elcord-mode)
 
 ;; js2 mode
 (require 'js2-mode)
@@ -128,14 +125,20 @@
 (setq web-mode-style-padding 2)
 (setq web-mode-script-padding 2)
 
-;; vim % thing
-(defun goto-match-paren (arg)
-	"Go to the matching parenthesis if on parenthesis, otherwise insert %.
-	vi style of % jumping to matching brace."
-	(interactive "p")
-	(cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-				((looking-at "\\s\)") (forward-char 1) (backward-list 1))
-				(t (self-insert-command (or arg 1)))))
+;; helm
+(require 'helm-config)
+(global-set-key (kbd "C-x p") 'helm-find-files)
+(global-set-key (kbd "C-x b") 'helm-buffers-list)
+
+;; evil
+(add-to-list 'load-path "~/.emacs.d/evil")
+(require 'evil)
+(evil-mode 1)
+
+;; evil CTRL-C
+(define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
+(define-key evil-visual-state-map (kbd "C-c") 'evil-normal-state)
+(define-key evil-replace-state-map (kbd "C-c") 'evil-normal-state)
 
 ;; format entire file
 (defun indent-buffer ()
@@ -164,46 +167,8 @@
 		(eshell-send-input)))
 
 ;; starting window position
-(setq initial-frame-alist '((left . 560) (top . 40)))
+(setq initial-frame-alist '((left . 660) (top . 100)))
 
-;; reload config with f5
-(global-set-key (kbd "<f5>")
-								(lambda()
-									(interactive)
-									(load-file "~/.emacs")))
-
-;; NOTE
-;; C-u C-x =
-;; to show face details
-
-;; toggle term-mode easily
-(require 'term)
-
-(defun term-toggle-mode ()
-	"Toggles term between line mode and char mode"
-	(interactive)
-	(if (term-in-line-mode)
-		(term-char-mode)
-		(term-line-mode)))
-
-(define-key term-mode-map (kbd "C-j") 'term-toggle-mode)
-(define-key term-mode-map (kbd "C-j") 'term-toggle-mode)
-(define-key term-raw-map (kbd "C-j") 'term-toggle-mode)
-(define-key term-raw-map (kbd "C-j") 'term-toggle-mode)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-	 ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
- '(custom-safe-themes
-	 (quote
-		("c221703cc604312f6f72349704f7329f80ccc6a261af769332ec80171b728cc0" default)))
- '(package-selected-packages
-	 (quote
-		(elcord web-mode powerline paganini-theme js2-mode auto-complete))))
-
-;; eval buffer
-(global-set-key (kbd "C-c C-e") 'eval-buffer)
+(defun use-tabs (yes)
+  "use tabs or spaces"
+  (setq-default indent-tabs-mode yes))
