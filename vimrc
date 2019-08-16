@@ -17,7 +17,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/gv.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'mhinz/vim-signify'
-" Plug 'vbe0201/vimdiscord'
+Plug 'cocopon/iceberg.vim'
 
 call plug#end()
 
@@ -36,11 +36,15 @@ set laststatus=2
 set noshowmode
 set wildmenu
 set wildmode=list:longest,full
+set t_Co=256
 syntax on
 filetype plugin indent on
 set tabstop=2
 set shiftwidth=2
 set noexpandtab
+
+" remap esc to ctrl-c
+noremap <C-c> <Esc>
 
 " fix css and js indent in html
 let g:html_indent_script1 = "inc"
@@ -62,13 +66,13 @@ nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
 
 " set theme
+let g:seoul256_background = 236
 color seoul256
-" let g:gruvbox_contrast_dark = 'hard'
-" color gruvbox
 set background=dark
+
 " line number colors
 highlight LineNr ctermfg=white ctermbg=NONE
-" transparent bg
+hi EndOfBuffer ctermbg=NONE
 hi Normal guibg=NONE ctermbg=NONE
 
 " NERD Tree
@@ -78,6 +82,7 @@ let g:NERDTreeWinSize=24
 
 " fzf
 let $FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 nmap <c-f> :Ag 
 nmap <c-p> :Files<cr>
 nmap <c-o> :Buffers<cr>
@@ -97,9 +102,9 @@ let g:mode_map = {
 
 function! s:make_statusline()
 	let mode = '%1* %{g:mode_map[mode()]} %0*'
-	let fn = ' %f '
-	let branch = "%{fugitive#head() != '' ? '│ '.fugitive#head() : ''}"
-	let num = '%= %{&filetype} │ %l:%c │ %P '
+	let fn = '%2* %f %0*'
+	let branch = " %{fugitive#head() != '' ? 'git->'.fugitive#head() : ''}"
+	let num = '%= %{&filetype} %3* %l:%c %P %0*'
 	return mode.fn.branch.num
 endfunction
 
@@ -108,7 +113,9 @@ hi StatusLine ctermbg=223 ctermfg=235
 hi StatusLineTerm ctermbg=black ctermfg=white
 hi StatusLineTermNC ctermbg=black ctermfg=white
 
-hi User1 ctermfg=235 ctermbg=223
+hi User1 ctermfg=235 ctermbg=111
+hi User2 ctermfg=255 ctermbg=236
+hi User3 ctermfg=255 ctermbg=236
 
 " signify
 let g:signify_vcs_list = ['git']
@@ -132,3 +139,16 @@ else
 	let &t_SR = "\<Esc>[4 q"
 	let &t_EI = "\<Esc>[2 q"
 endif
+
+function! InstallNow()
+	execute "w"
+	execute "source %"
+	execute "PlugInstall"
+endfunction
+
+function! Eval()
+	execute "source %"
+endfunction
+
+command! -bar InstallNow call InstallNow()
+command! -bar Eval call Eval()
