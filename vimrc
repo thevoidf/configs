@@ -3,24 +3,19 @@ call plug#begin('~/.vim/plugged')
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'w0rp/ale', { 'on':  'ALEToggle' }
-Plug 'dracula/vim'
-Plug 'morhetz/gruvbox'
-Plug 'junegunn/seoul256.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rhubarb'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/gv.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'mhinz/vim-signify'
+Plug 'morhetz/gruvbox'
+Plug 'junegunn/seoul256.vim'
 Plug 'cocopon/iceberg.vim'
-Plug 'haishanh/night-owl.vim'
-Plug 'aonemd/kuroi.vim'
-Plug 'aliou/moriarty.vim'
 Plug 'sjl/badwolf'
 Plug 'rakr/vim-one'
 
@@ -40,12 +35,20 @@ set smartcase
 set laststatus=2
 set noshowmode
 set wildmenu
-set wildmode=list:longest,full
+set wildmode=full
 syntax on
 filetype plugin indent on
 set tabstop=2
 set shiftwidth=2
 set noexpandtab
+
+" spell checking
+setlocal spell
+setlocal spell spelllang=en_us
+" set complete+=kspell " word completion
+
+" show indent
+set list listchars=tab:»·,trail:·,nbsp:·
 
 " remap esc to ctrl-c
 noremap <C-c> <Esc>
@@ -61,17 +64,13 @@ endif
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
 
-" don't split plug
+runtime macros/matchit.vim
+
+" plug
 let g:plug_window = 'enew' 
 
-" easier movement
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
-
 " keys
-nmap <s-f> mzgg=G`z " indent buffer
+nmap <s-f> mzgg=G`z
 noremap <leader>e :qa!<cr>
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
@@ -81,10 +80,10 @@ color one
 set background=dark
 
 " line number colors
-highlight LineNr ctermfg=white ctermbg=NONE guifg=white guibg=NONE
+highlight LineNr ctermfg=white ctermbg=NONE guifg=#ffffff guibg=NONE
 highlight SignColumn ctermbg=NONE guibg=NONE
 hi EndOfBuffer ctermbg=NONE guibg=NONE
-hi Normal guibg=NONE ctermbg=NONE 
+hi Normal ctermbg=NONE guibg=NONE 
 
 " NERD Tree
 map <C-n> :NERDTreeToggle<CR>
@@ -94,7 +93,6 @@ let g:NERDTreeWinSize=24
 " fzf
 let $FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
-nmap <c-l> :Ag 
 nmap <c-p> :Files<cr>
 nmap <c-o> :Buffers<cr>
 
@@ -139,8 +137,6 @@ function! SetupPython()
 endfunction
 command! -bar SetupPython call SetupPython()
 
-runtime macros/matchit.vim
-
 " cursor types
 if exists('$TMUX')
 	let &t_SI = "\<Esc>Ptmux;\<Esc>\e[6 q\<Esc>\\"
@@ -149,18 +145,5 @@ if exists('$TMUX')
 else
 	let &t_SI = "\<Esc>[6 q"
 	let &t_SR = "\<Esc>[4 q"
-	let &t_EI = "\<Esc>[1 q"
+	let &t_EI = "\<Esc>[2 q"
 endif
-
-function! InstallNow()
-	execute "w"
-	execute "source %"
-	execute "PlugInstall"
-endfunction
-
-function! Eval()
-	execute "source %"
-endfunction
-
-command! -bar InstallNow call InstallNow()
-command! -bar Eval call Eval()
