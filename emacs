@@ -8,10 +8,10 @@
 
 ;; python 4 space tabs
 (add-hook 'python-mode-hook
-	  (lambda ()
-	    (setq indent-tabs-mode t)
-	    (setq python-indent 4)
-	    (setq tab-width 4)))
+					(lambda ()
+						(setq indent-tabs-mode t)
+						(setq python-indent 4)
+						(setq tab-width 4)))
 
 ;; fix c indentation
 (setq c-default-style "bsd"
@@ -45,7 +45,8 @@
 ;; remove frigne (line number right border thing)
 (set-fringe-mode 0)
 ;; line number padding
-(custom-set-variables '(linum-format (quote " %2d ")))
+(custom-set-variables
+ '(linum-format (quote " %2d ")))
 ;; hide toolbar
 (tool-bar-mode -1)
 ;; no menu bar
@@ -66,50 +67,27 @@
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
+;; stop!
+(setq custom-file "~/.emacs.d/custom.el")
+(write-region "" nil custom-file)
+(load custom-file)
+
 ;; y/n
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; setup melpa
 (require 'package)
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 (package-initialize)
 
-(defun install-packages (&rest packages)
-	(mapcar
-		(lambda (package)
-			(if (package-installed-p package)
-				nil
-				(package-install package)
-				package))
-		packages))
-
-(or (file-exists-p package-user-dir)
-    (package-refresh-contents))
-
-;; package list
-(install-packages
- 'powerline
- 'which-key
- 'paganini-theme
- 'gruvbox-theme
- 'elcord
- 'web-mode
- 'js2-mode
- 'projectile
- 'helm
- 'helm-projectile
- 'undo-tree
- 'company
- 'evil
- 'evil-commentary
- 'magit
- 'evil-magit)
-
-;; set theme
-(require 'use-package)
+(unless (package-installed-p 'use-package)
+	(package-refresh-contents)
+	(package-install 'use-package))
 (use-package doom-themes
   :ensure t)
+
+;; set theme
 (doom-themes-org-config)
 (load-theme 'doom-one t)
 ;; set background color
@@ -120,7 +98,7 @@
 ;; set font
 (set-face-attribute 'default nil
 										:family "Roboto Mono Medium"
-										:height 160)
+										:height 150)
 ;; no italic
 (set-face-italic-p 'italic nil)
 
@@ -128,37 +106,40 @@
 (add-to-list 'default-frame-alist '(height . 36))
 (add-to-list 'default-frame-alist '(width . 79))
 
-(add-hook 'after-init-hook #'global-emojify-mode)
-
-;; discord rpc
-;; (require 'elcord)
-;; (elcord-mode)
-
 ;; which-key
-(require 'which-key)
-(which-key-mode)
+(use-package which-key
+ :ensure t
+ :init
+ (which-key-mode))
+
+(use-package undo-tree
+ :ensure t)
+
+;; yasnippet
+(use-package yasnippet
+  :ensure t
+  :config
+  (use-package yasnippet-snippets
+    :ensure t))
 
 ;; js2 mode
 (use-package js2-mode
 	:ensure t
 	:config
-	(setq js2-basic-offset 2)
-  (setq js2-include-node-externs t)
+	(setq js2-basic-offset tab-width)
+	(setq js2-include-node-externs t)
 	(setq js2-strict-missing-semi-warning nil))
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (set-face-italic 'js2-function-param nil)
-
-;; powerline
-;; (require 'powerline)
-;; (powerline-center-evil-theme)
 
 (use-package doom-modeline
 	:ensure t
 	:hook (after-init . doom-modeline-mode))
 
 ;; web mode
-(require 'web-mode)
+(use-package web-mode
+ :ensure t)
 (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (setq web-mode-markup-indent-offset 2)
@@ -202,6 +183,8 @@
 	(setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 ;; evil commentary
+(use-package evil-commentary
+	:ensure t)
 (evil-commentary-mode)
 
 ;; projectile
@@ -228,13 +211,12 @@
 (define-key evil-normal-state-map (kbd "C-o") 'helm-buffers-list)
 
 ;; company
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
+(use-package company
+						 :ensure t)
 (setq company-minimum-prefix-length 1)
 (setq company-dabbrev-downcase 0)
 (setq company-idle-delay 0)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(add-hook 'after-init-hook 'global-company-mode)
 
 ;; magit
 (use-package magit
@@ -249,6 +231,7 @@
 (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
 (define-key evil-visual-state-map (kbd "C-c") 'evil-normal-state)
 (define-key evil-replace-state-map (kbd "C-c") 'evil-normal-state)
+(define-key evil-motion-state-map (kbd "C-c") 'evil-normal-state)
 (evil-define-key 'insert magit-file-mode-map (kbd "C-c") 'evil-normal-state)
 (evil-define-key 'insert magit-file-mode-map (kbd "C-c") 'evil-normal-state)
 (evil-define-key 'insert magit-file-mode-map (kbd "C-c") 'evil-normal-state)
