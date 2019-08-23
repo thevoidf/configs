@@ -7,6 +7,8 @@ Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
+Plug 'machakann/vim-highlightedyank'
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'w0rp/ale', { 'on': 'ALEToggle' }
 Plug 'tpope/vim-fugitive'
@@ -15,6 +17,8 @@ Plug 'mhinz/vim-signify'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': ':call mkdp#util#install()', 'for': 'markdown', 'on': 'MarkdownPreview' }
+Plug 'metakirby5/codi.vim', { 'on': 'Codi' }
 
 " Colors
 Plug 'morhetz/gruvbox'
@@ -44,12 +48,13 @@ set laststatus=2
 set noshowmode
 set wildmenu
 set wildmode=full
+set encoding=utf-8
 syntax on
 filetype plugin indent on
 set tabstop=2
 set shiftwidth=2
 set noexpandtab
-set relativenumber
+" set relativenumber
 
 " show indent
 set list
@@ -61,13 +66,13 @@ autocmd BufRead,BufNewFile *.txt set complete+=kspell
 
 " remap esc to ctrl-c
 noremap <C-c> <Esc>
+noremap <C-i> <C-y>
 
 " enable gui colors
 if has('termguicolors')
 	let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 	let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 	set termguicolors
-	set t_Co=256
 endif
 
 " fix css and js indent in html
@@ -76,6 +81,9 @@ let g:html_indent_style1 = "inc"
 
 " match html tags
 runtime macros/matchit.vim
+
+" ctags
+set tags=./tags;/
 
 " set theme
 color challenger_deep
@@ -94,6 +102,9 @@ let g:plug_window = 'enew'
 " markdown
 let g:vim_markdown_folding_disabled = 1
 
+let g:highlightedyank_highlight_duration = 200
+highlight HighlightedyankRegion ctermbg=darkgray guibg=#3d3d3d
+
 " NERD Tree
 noremap <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -101,28 +112,33 @@ let g:NERDTreeWinSize=24
 
 " signify
 let g:signify_vcs_list = ['git']
+nmap <leader>hn <plug>(signify-next-hunk)
+nmap <leader>hp <plug>(signify-prev-hunk)
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-h': 'split',
-  \ 'ctrl-v': 'vsplit' }
+	\ 'ctrl-t': 'tab split',
+	\ 'ctrl-h': 'split',
+	\ 'ctrl-v': 'vsplit' }
 nmap <c-p> :Files<cr>
 nmap <c-o> :Buffers<cr>
 
+" codi
+noremap <leader>j :Codi javascript<cr>
+
 " statusline
 let g:mode_map = {
-	\	'n': 'Normal',
-	\	'i': 'Insert',
-	\	'v': 'Visual',
-	\	'V': 'Visual',
-	\	'R': 'Replace',
-	\	's': 'Select',
-	\	't': 'Terminal',
-	\	'c': 'Command',
-	\	'!': 'Shell'
-\ }
+	\ 'n': 'Normal',
+	\ 'i': 'Insert',
+	\ 'v': 'Visual',
+	\ 'V': 'Visual',
+	\ 'R': 'Replace',
+	\ 's': 'Select',
+	\ 't': 'Terminal',
+	\ 'c': 'Command',
+	\ '!': 'Shell'
+	\ }
 
 function! s:make_statusline()
 	let mode = '%1* %{g:mode_map[mode()]} %0*'
@@ -160,16 +176,25 @@ noremap <leader>c :bd!<cr>
 noremap <leader>x :qa!<cr>
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
+nnoremap <leader>nh :noh<cr>
 nnoremap <leader>e :source %<cr>
 nnoremap <leader>i :PlugInstall<cr>
 nnoremap <leader>g :Gstatus<cr>
+noremap <leader>r :Commands<cr>
+noremap <leader>u :UndotreeToggle<cr>
+
+" resize
+nnoremap <s-h> :vertical resize -1<cr>
+nnoremap <s-l> :vertical resize +1<cr>
+nnoremap <s-j> :resize -1<cr>
+nnoremap <s-k> :resize +1<cr>
 
 function! ToggleIndent()
-  if &expandtab == 0
-    set expandtab
-  else
-    set noexpandtab
-  endif
+	if &expandtab == 0
+		set expandtab
+	else
+		set noexpandtab
+	endif
 endfunction
 
 command! ToggleIndent call ToggleIndent()
