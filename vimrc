@@ -102,6 +102,7 @@ let g:plug_window = 'enew'
 " markdown
 let g:vim_markdown_folding_disabled = 1
 
+" highlightedyank
 let g:highlightedyank_highlight_duration = 200
 highlight HighlightedyankRegion ctermbg=darkgray guibg=#3d3d3d
 
