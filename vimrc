@@ -2,11 +2,13 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
+Plug 'junegunn/vim-slash'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -27,6 +29,7 @@ Plug 'cocopon/iceberg.vim'
 Plug 'sjl/badwolf'
 Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
 Plug 'kabbamine/yowish.vim'
+Plug 'mhinz/vim-janah'
 
 call plug#end()
 
@@ -61,12 +64,13 @@ set list
 set listchars=tab:\|\ ,space:.,trail:!
 
 " spell checking
-setlocal spell spelllang=en_us
+set spell spelllang=en_us
 autocmd BufRead,BufNewFile *.txt set complete+=kspell
 
-" remap esc to ctrl-c
+" default remaps
 noremap <C-c> <Esc>
 noremap <C-i> <C-y>
+noremap q <nop>
 
 " enable gui colors
 if has('termguicolors')
@@ -86,12 +90,12 @@ runtime macros/matchit.vim
 set tags=./tags;/
 
 " set theme
-color challenger_deep
+color janah
 set background=dark
 
-" line number colors
-highlight LineNr ctermfg=white ctermbg=NONE guifg=#ffffff guibg=NONE
-highlight SignColumn ctermbg=NONE guibg=NONE
+" color overrides
+hi LineNr ctermfg=white ctermbg=NONE guifg=#ffffff guibg=NONE
+hi SignColumn ctermbg=NONE guibg=NONE
 hi EndOfBuffer ctermbg=NONE guibg=NONE
 hi Normal ctermbg=NONE guibg=NONE 
 hi SpecialKey ctermbg=NONE ctermfg=20 guibg=NONE guifg=#3d3d3d
@@ -107,12 +111,17 @@ let g:highlightedyank_highlight_duration = 200
 highlight HighlightedyankRegion ctermbg=darkgray guibg=#3d3d3d
 
 " NERD Tree
-noremap <C-n> :NERDTreeToggle<CR>
+noremap <c-n> :NERDTreeToggle<cr>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-let g:NERDTreeWinSize=24
+let g:NERDTreeWinSize = 24
 
 " signify
 let g:signify_vcs_list = ['git']
+hi SignifySignAdd guibg=#000000 guifg=#ffffff
+hi SignifySignChange guibg=#000000 guifg=#ffffff
+hi SignifySignDelete guibg=#000000 guifg=#ffffff
+hi SignifySignChangeDelete guibg=#000000 guifg=#ffffff
+hi SignifySignDeleteFirstLine guibg=#000000 guifg=#ffffff
 nmap <leader>hn <plug>(signify-next-hunk)
 nmap <leader>hp <plug>(signify-prev-hunk)
 
@@ -150,6 +159,7 @@ function! s:make_statusline()
 endfunction
 
 let &statusline = s:make_statusline()
+
 hi StatusLine ctermbg=black ctermfg=235 guibg=#212121 guifg=#ffffff
 hi StatusLineTerm ctermbg=black ctermfg=white guibg=#282C34 guifg=#ffffff
 hi StatusLineTermNC ctermbg=black ctermfg=white guibg=#282C34 guifg=#ffffff
@@ -177,18 +187,21 @@ noremap <leader>c :bd!<cr>
 noremap <leader>x :qa!<cr>
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
-nnoremap <leader>nh :noh<cr>
 nnoremap <leader>e :source %<cr>
 nnoremap <leader>i :PlugInstall<cr>
 nnoremap <leader>g :Gstatus<cr>
 noremap <leader>r :Commands<cr>
 noremap <leader>u :UndotreeToggle<cr>
 
+" move lines
+noremap <c-j> :move+<cr>
+noremap <c-k> :move-2<cr>
+
 " resize
-nnoremap <s-h> :vertical resize -1<cr>
-nnoremap <s-l> :vertical resize +1<cr>
-nnoremap <s-j> :resize -1<cr>
-nnoremap <s-k> :resize +1<cr>
+nnoremap <leader>rh :vertical resize -1<cr>
+nnoremap <leader>rl :vertical resize +1<cr>
+nnoremap <leader>rj :resize +1<cr>
+nnoremap <leader>rk :resize -1<cr>
 
 function! ToggleIndent()
 	if &expandtab == 0
