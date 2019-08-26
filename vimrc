@@ -138,8 +138,8 @@ hi SignifySignDelete guibg=#000000 guifg=#ffffff
 hi SignifySignChangeDelete guibg=#000000 guifg=#ffffff
 hi SignifySignDeleteFirstLine guibg=#000000 guifg=#ffffff
 
-nmap <leader>hn <plug>(signify-next-hunk)
-nmap <leader>hp <plug>(signify-prev-hunk)
+nmap h] <plug>(signify-next-hunk)
+nmap h[ <plug>(signify-prev-hunk)
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
