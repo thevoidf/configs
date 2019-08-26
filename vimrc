@@ -59,12 +59,16 @@ set shiftwidth=2
 set noexpandtab
 " set relativenumber
 
+" python indent
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 noexpandtab
+
 " show indent
 set list
 set listchars=tab:\|\ ,space:.,trail:!
 
 " spell checking
-set spell spelllang=en_us
+set spelllang=en_us
+noremap <leader>s :set spell!<cr>
 autocmd BufRead,BufNewFile *.txt set complete+=kspell
 
 " default remaps
@@ -95,10 +99,12 @@ set background=dark
 
 " color overrides
 hi LineNr ctermfg=white ctermbg=NONE guifg=#ffffff guibg=NONE
+hi CursorLineNr ctermfg=white ctermbg=NONE guifg=#ffffff guibg=NONE
 hi SignColumn ctermbg=NONE guibg=NONE
 hi EndOfBuffer ctermbg=NONE guibg=NONE
 hi Normal ctermbg=NONE guibg=NONE 
 hi SpecialKey ctermbg=NONE ctermfg=20 guibg=NONE guifg=#3d3d3d
+hi NonText ctermbg=NONE ctermfg=20 guibg=NONE guifg=#3d3d3d
 
 " plug
 let g:plug_window = 'enew' 
@@ -115,24 +121,61 @@ noremap <c-n> :NERDTreeToggle<cr>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let g:NERDTreeWinSize = 24
 
+" ale
+let g:ale_linters = { 'javascript': ['eslint'] }
+hi ALEError guibg=NONE
+hi ALEWarning guibg=NONE
+hi ALEInfo guibg=NONE
+hi ALEStyleError guibg=NONE
+hi ALEStyleWarning guibg=NONE
+
 " signify
 let g:signify_vcs_list = ['git']
+
 hi SignifySignAdd guibg=#000000 guifg=#ffffff
 hi SignifySignChange guibg=#000000 guifg=#ffffff
 hi SignifySignDelete guibg=#000000 guifg=#ffffff
 hi SignifySignChangeDelete guibg=#000000 guifg=#ffffff
 hi SignifySignDeleteFirstLine guibg=#000000 guifg=#ffffff
+
 nmap <leader>hn <plug>(signify-next-hunk)
 nmap <leader>hp <plug>(signify-prev-hunk)
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+
+" remap fzf opens
 let g:fzf_action = {
 	\ 'ctrl-t': 'tab split',
 	\ 'ctrl-h': 'split',
 	\ 'ctrl-v': 'vsplit' }
+
+" fzf colors
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+	\ 'bg':      ['bg', 'Normal'],
+	\ 'hl':      ['fg', 'Comment'],
+	\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+	\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+	\ 'hl+':     ['fg', 'Statement'],
+	\ 'info':    ['fg', 'PreProc'],
+	\ 'border':  ['fg', 'Ignore'],
+	\ 'prompt':  ['fg', 'Conditional'],
+	\ 'pointer': ['fg', 'Exception'],
+	\ 'marker':  ['fg', 'Keyword'],
+	\ 'spinner': ['fg', 'Label'],
+	\ 'header':  ['fg', 'Comment'] }
+
+" fzf maps
 nmap <c-p> :Files<cr>
 nmap <c-o> :Buffers<cr>
+
+" hide fzf status
+if has('nvim')
+	autocmd! FileType fzf
+	autocmd  FileType fzf set laststatus=0 noshowmode noruler
+		\| autocmd BufLeave <buffer> set laststatus=2
+endif
 
 " codi
 noremap <leader>j :Codi javascript<cr>
@@ -167,17 +210,6 @@ hi StatusLineTermNC ctermbg=black ctermfg=white guibg=#282C34 guifg=#ffffff
 hi User1 ctermfg=235 ctermbg=111 guibg=#61AFEF guifg=#000000
 hi User2 ctermfg=255 ctermbg=236 guibg=#98C379 guifg=#000000
 hi User3 ctermfg=255 ctermbg=236 guibg=#E5C07B guifg=#000000
-
-" cursor types
-if exists('$TMUX')
-	let &t_SI = "\<Esc>Ptmux;\<Esc>\e[6 q\<Esc>\\"
-	let &t_SR = "\<Esc>Ptmux;\<Esc>\e[4 q\<Esc>\\"
-	let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
-else
-	let &t_SI = "\<Esc>[6 q"
-	let &t_SR = "\<Esc>[4 q"
-	let &t_EI = "\<Esc>[2 q"
-endif
 
 " keys
 noremap <s-f> mzgg=G`z
