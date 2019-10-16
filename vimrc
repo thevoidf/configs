@@ -2,6 +2,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+Plug 'leafgarland/typescript-vim'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
@@ -10,6 +11,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'junegunn/vim-slash'
 Plug 'machakann/vim-highlightedyank'
+Plug 'junegunn/vim-easy-align'
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'w0rp/ale', { 'on': 'ALEToggle' }
@@ -36,6 +38,8 @@ call plug#end()
 let mapleader = ' '
 let maplocalleader = ' '
 
+let status = exists("$TMUX") ? 0 : 2
+
 set noswapfile
 set hidden
 set splitbelow
@@ -47,7 +51,7 @@ set incsearch
 set hlsearch
 set ignorecase
 set smartcase
-set laststatus=2
+let &laststatus=status
 set noshowmode
 set wildmenu
 set wildmode=full
@@ -60,7 +64,7 @@ set noexpandtab
 " set relativenumber
 
 " python indent
-autocmd FileType python setlocal tabstop=4 shiftwidth=4 noexpandtab
+autocmd FileType python set tabstop=4 shiftwidth=4 noexpandtab
 
 " show indent
 set list
@@ -86,15 +90,13 @@ endif
 " fix css and js indent in html
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
-
-" match html tags
 runtime macros/matchit.vim
 
 " ctags
 set tags=./tags;/
 
 " set theme
-color janah
+color iceberg
 set background=dark
 
 " color overrides
@@ -138,19 +140,17 @@ hi SignifySignDelete guibg=#000000 guifg=#ffffff
 hi SignifySignChangeDelete guibg=#000000 guifg=#ffffff
 hi SignifySignDeleteFirstLine guibg=#000000 guifg=#ffffff
 
-nmap h] <plug>(signify-next-hunk)
-nmap h[ <plug>(signify-prev-hunk)
+noremap ]h <plug>(signify-next-hunk)
+noremap [h <plug>(signify-prev-hunk)
 
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 
-" remap fzf opens
 let g:fzf_action = {
 	\ 'ctrl-t': 'tab split',
 	\ 'ctrl-h': 'split',
 	\ 'ctrl-v': 'vsplit' }
 
-" fzf colors
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
 	\ 'bg':      ['bg', 'Normal'],
@@ -166,15 +166,16 @@ let g:fzf_colors =
 	\ 'spinner': ['fg', 'Label'],
 	\ 'header':  ['fg', 'Comment'] }
 
-" fzf maps
-nmap <c-p> :Files<cr>
-nmap <c-o> :Buffers<cr>
+" command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, '--color-path="0;33"', <bang>0)
 
-" hide fzf status
+noremap <c-p> :Files<cr>
+noremap <c-o> :Buffers<cr>
+noremap <c-f> :Ag<cr>
+
 if has('nvim')
 	autocmd! FileType fzf
-	autocmd  FileType fzf set laststatus=0 noshowmode noruler
-		\| autocmd BufLeave <buffer> set laststatus=2
+	autocmd  FileType fzf set laststatus=0 noshowmode
+		\| autocmd BufLeave <buffer> let &laststatus=status
 endif
 
 " codi
@@ -203,13 +204,15 @@ endfunction
 
 let &statusline = s:make_statusline()
 
-hi StatusLine ctermbg=black ctermfg=235 guibg=#212121 guifg=#ffffff
+" have to reverse this sometimes
+" hi StatusLine ctermbg=black ctermfg=235 guibg=#ffffff guifg=#212121
+hi StatusLine ctermbg=black ctermfg=235 guibg=#ffffff guifg=#212121
 hi StatusLineTerm ctermbg=black ctermfg=white guibg=#282C34 guifg=#ffffff
 hi StatusLineTermNC ctermbg=black ctermfg=white guibg=#282C34 guifg=#ffffff
 
-hi User1 ctermfg=235 ctermbg=111 guibg=#61AFEF guifg=#000000
-hi User2 ctermfg=255 ctermbg=236 guibg=#98C379 guifg=#000000
-hi User3 ctermfg=255 ctermbg=236 guibg=#E5C07B guifg=#000000
+hi User1 ctermfg=235 ctermbg=111 guibg=#404040 guifg=#ffffff
+hi User2 ctermfg=255 ctermbg=236 guibg=#2b2b2b guifg=#ffffff
+hi User3 ctermfg=255 ctermbg=236 guibg=#404040 guifg=#ffffff
 
 " keys
 noremap <s-f> mzgg=G`z
@@ -230,10 +233,10 @@ noremap <c-j> :move+<cr>
 noremap <c-k> :move-2<cr>
 
 " resize
-nnoremap <leader>rh :vertical resize -1<cr>
-nnoremap <leader>rl :vertical resize +1<cr>
-nnoremap <leader>rj :resize +1<cr>
-nnoremap <leader>rk :resize -1<cr>
+nnoremap <c-h> :vertical resize -1<cr>
+nnoremap <c-l> :vertical resize +1<cr>
+nnoremap <c-j> :resize +1<cr>
+nnoremap <c-k> :resize -1<cr>
 
 function! ToggleIndent()
 	if &expandtab == 0
