@@ -1,0 +1,4 @@
+set clipboard+=unnamed
+set commentary
+map gh <Action>(ShowErrorDescription)
+map == <Action>(ReformatCode)
